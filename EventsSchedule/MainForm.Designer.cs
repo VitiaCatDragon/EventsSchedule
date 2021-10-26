@@ -35,13 +35,14 @@
             this.ColumnId = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ColumnName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ColumnDate = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnStartsAt = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnFinished = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.addEventButton = new System.Windows.Forms.ToolStripButton();
             this.editEventButton = new System.Windows.Forms.ToolStripButton();
             this.removeEventButton = new System.Windows.Forms.ToolStripButton();
+            this.autoRunButton = new System.Windows.Forms.ToolStripButton();
             this.eventChecker = new System.Windows.Forms.Timer(this.components);
-            this.columnFinished = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnStartsAt = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -79,12 +80,23 @@
             this.ColumnDate.Text = "Event Time";
             this.ColumnDate.Width = 190;
             // 
+            // columnStartsAt
+            // 
+            this.columnStartsAt.Text = "Event Starts At";
+            this.columnStartsAt.Width = 173;
+            // 
+            // columnFinished
+            // 
+            this.columnFinished.Text = "Is Finished?";
+            this.columnFinished.Width = 73;
+            // 
             // toolStrip1
             // 
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.addEventButton,
             this.editEventButton,
-            this.removeEventButton});
+            this.removeEventButton,
+            this.autoRunButton});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(800, 25);
@@ -118,21 +130,20 @@
             this.removeEventButton.Text = "Remove";
             this.removeEventButton.Click += new System.EventHandler(this.removeEventButton_Click);
             // 
+            // autoRunButton
+            // 
+            this.autoRunButton.Image = ((System.Drawing.Image)(resources.GetObject("autoRunButton.Image")));
+            this.autoRunButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.autoRunButton.Name = "autoRunButton";
+            this.autoRunButton.Size = new System.Drawing.Size(164, 22);
+            this.autoRunButton.Text = "Start when windows starts";
+            this.autoRunButton.Click += new System.EventHandler(this.autoRunButton_Click);
+            // 
             // eventChecker
             // 
             this.eventChecker.Enabled = true;
             this.eventChecker.Interval = 1000;
             this.eventChecker.Tick += new System.EventHandler(this.eventChecker_Tick);
-            // 
-            // columnFinished
-            // 
-            this.columnFinished.Text = "Is Finished?";
-            this.columnFinished.Width = 73;
-            // 
-            // columnStartsAt
-            // 
-            this.columnStartsAt.Text = "Event Starts At";
-            this.columnStartsAt.Width = 173;
             // 
             // MainForm
             // 
@@ -142,7 +153,7 @@
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.eventsList);
             this.Name = "MainForm";
-            this.Text = "Form1";
+            this.Text = "Events Schedule";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
@@ -166,5 +177,6 @@
         private System.Windows.Forms.Timer eventChecker;
         private System.Windows.Forms.ColumnHeader columnStartsAt;
         private System.Windows.Forms.ColumnHeader columnFinished;
+        private System.Windows.Forms.ToolStripButton autoRunButton;
     }
 }

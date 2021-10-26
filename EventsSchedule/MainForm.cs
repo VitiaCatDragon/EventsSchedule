@@ -1,6 +1,8 @@
 ﻿using Microsoft.Toolkit.Uwp.Notifications;
+using Microsoft.Win32;
 using System;
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -9,6 +11,9 @@ namespace EventsSchedule
     public partial class MainForm : Form
     {
         public Database database;
+
+        private readonly RegistryKey _run = Registry.LocalMachine.OpenSubKey("SOFTWARE").OpenSubKey("Microsoft").OpenSubKey("Windows").OpenSubKey("CurrentVersion").OpenSubKey("Run", true);
+
         public MainForm()
         {
             InitializeComponent();
@@ -40,6 +45,7 @@ namespace EventsSchedule
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            autoRunButton.Checked = _run.GetValue("EventsSchedule") != null;
             foreach (var record in database.Records)
             {
                 AddItem(record);
@@ -123,6 +129,19 @@ namespace EventsSchedule
                     .Show();
                 }
                 record.ViewItem.SubItems[3].Text = (DateTimeOffset.FromUnixTimeSeconds(record.Date) - DateTimeOffset.UtcNow).ToString(@"d\.hh\:mm\:ss");
+            }
+        }
+
+        private void autoRunButton_Click(object sender, EventArgs e)
+        {
+            autoRunButton.Checked = !autoRunButton.Checked;
+            if (autoRunButton.Checked)
+            {
+                _run.SetValue("EventsSchedule", new Uri(System.Reflection.Assembly.GetExecutingAssembly().CodeBase).LocalPath);
+            }
+            else
+            {
+                _run.DeleteValue("EventsSchedule");
             }
         }
     }
