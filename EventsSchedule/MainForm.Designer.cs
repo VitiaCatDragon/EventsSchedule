@@ -43,7 +43,11 @@
             this.removeEventButton = new System.Windows.Forms.ToolStripButton();
             this.autoRunButton = new System.Windows.Forms.ToolStripButton();
             this.eventChecker = new System.Windows.Forms.Timer(this.components);
+            this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
+            this.notifyIconContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.exitButton = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1.SuspendLayout();
+            this.notifyIconContextMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // eventsList
@@ -145,6 +149,29 @@
             this.eventChecker.Interval = 1000;
             this.eventChecker.Tick += new System.EventHandler(this.eventChecker_Tick);
             // 
+            // notifyIcon
+            // 
+            this.notifyIcon.BalloonTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.notifyIcon.BalloonTipText = "Programm in tray";
+            this.notifyIcon.ContextMenuStrip = this.notifyIconContextMenu;
+            this.notifyIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon.Icon")));
+            this.notifyIcon.Text = "Events Schedule";
+            this.notifyIcon.MouseClick += new System.Windows.Forms.MouseEventHandler(this.notifyIcon_MouseClick);
+            // 
+            // notifyIconContextMenu
+            // 
+            this.notifyIconContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.exitButton});
+            this.notifyIconContextMenu.Name = "notifyIconContextMenu";
+            this.notifyIconContextMenu.Size = new System.Drawing.Size(94, 26);
+            // 
+            // exitButton
+            // 
+            this.exitButton.Name = "exitButton";
+            this.exitButton.Size = new System.Drawing.Size(93, 22);
+            this.exitButton.Text = "Exit";
+            this.exitButton.Click += new System.EventHandler(this.exitButton_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -152,11 +179,15 @@
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.eventsList);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MainForm";
             this.Text = "Events Schedule";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
+            this.Shown += new System.EventHandler(this.MainForm_Shown);
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
+            this.notifyIconContextMenu.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -178,5 +209,8 @@
         private System.Windows.Forms.ColumnHeader columnStartsAt;
         private System.Windows.Forms.ColumnHeader columnFinished;
         private System.Windows.Forms.ToolStripButton autoRunButton;
+        private System.Windows.Forms.NotifyIcon notifyIcon;
+        private System.Windows.Forms.ContextMenuStrip notifyIconContextMenu;
+        private System.Windows.Forms.ToolStripMenuItem exitButton;
     }
 }

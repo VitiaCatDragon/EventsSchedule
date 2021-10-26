@@ -4,6 +4,7 @@ using System;
 using System.Data;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Windows.Forms;
 
 namespace EventsSchedule
@@ -13,11 +14,15 @@ namespace EventsSchedule
         public Database database;
 
         private readonly RegistryKey _run = Registry.LocalMachine.OpenSubKey("SOFTWARE").OpenSubKey("Microsoft").OpenSubKey("Windows").OpenSubKey("CurrentVersion").OpenSubKey("Run", true);
+        private string[] _args;
 
-        public MainForm()
+        private bool allowExit = false;
+
+        public MainForm(string[] args)
         {
             InitializeComponent();
             database = new Database();
+            _args = args;
         }
 
         private void addEventButton_Click(object sender, EventArgs e)
@@ -137,11 +142,47 @@ namespace EventsSchedule
             autoRunButton.Checked = !autoRunButton.Checked;
             if (autoRunButton.Checked)
             {
-                _run.SetValue("EventsSchedule", new Uri(System.Reflection.Assembly.GetExecutingAssembly().CodeBase).LocalPath);
+                _run.SetValue("EventsSchedule", new Uri(System.Reflection.Assembly.GetExecutingAssembly().CodeBase).LocalPath + " -silent");
             }
             else
             {
                 _run.DeleteValue("EventsSchedule");
+            }
+        }
+
+        private void notifyIcon_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                Show();
+                WindowState = FormWindowState.Normal;
+                notifyIcon.Visible = false;
+            }
+        }
+
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (!allowExit)
+            {
+                e.Cancel = true;
+                Hide();
+                notifyIcon.Visible = true;
+            }
+        }
+
+        private void exitButton_Click(object sender, EventArgs e)
+        {
+            allowExit = true;
+            Close();
+        }
+
+        private void MainForm_Shown(object sender, EventArgs e)
+        {
+            if (_args.Length > 0 && _args[0] == "-silent")
+            {
+                WindowState = FormWindowState.Minimized;
+                Hide();
+                notifyIcon.Visible = true;
             }
         }
     }

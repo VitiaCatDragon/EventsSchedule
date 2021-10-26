@@ -11,6 +11,7 @@ namespace EventsSchedule
         private static SQLiteConnection _connection = new SQLiteConnection(@"Data Source=events.db; Version=3;");
 
         public List<Record> Records = new List<Record>();
+        public Dictionary<string, string> Settings = new Dictionary<string, string>();
 
         public Database()
         {
@@ -42,7 +43,16 @@ namespace EventsSchedule
             _connection.Close();
             return id;
         }
-        
+
+        public static void AddSettings(Record record)
+        {
+            string commandText = "INSERT INTO `settings`(key, value) VALUES (\"notification_audio\", NULL, \"version\", \"2\")";
+            var command = new SQLiteCommand(commandText, _connection);
+            _connection.Open();
+            command.ExecuteNonQuery();
+            _connection.Close();
+        }
+
         public static void EditRecord(Record record)
         {
             string commandText = "UPDATE `events` SET `name` = @name, `date` = @date, `finished` = @finished WHERE `id` = @id";
@@ -82,11 +92,30 @@ namespace EventsSchedule
             return records;
         }
 
+        public static Dictionary<string, string> GetSettings()
+        {
+            var settings = new Dictionary<string, string>();
+            string commandText = "SELECT * FROM `settings`";
+            var command = new SQLiteCommand(commandText, _connection);
+            _connection.Open();
+            var reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                settings.Add(reader.GetString(0), reader.GetString(1));
+            }
+            reader.Close();
+            _connection.Close();
+            return settings;
+        }
+
         private void CreateDatabase()
         {
             string commandText = "CREATE TABLE \"events\"(\"id\"   INTEGER, \"name\"  TEXT NOT NULL, \"date\"  INTEGER NOT NULL, \"finished\"  INTEGER NOT NULL DEFAULT 0, PRIMARY KEY(\"id\" AUTOINCREMENT));";
             var command = new SQLiteCommand(commandText, _connection);
             _connection.Open();
+            command.ExecuteNonQuery();
+            commandText = "CREATE TABLE \"settings\" (\"key\"   TEXT NOT NULL, \"value\" TEXT, PRIMARY KEY(\"key\"));";
+            command.CommandText = commandText;
             command.ExecuteNonQuery();
             _connection.Close();
         }
