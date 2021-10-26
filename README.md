@@ -5,5 +5,10 @@ Events Schedule is the programm can help you to don't forget events or your task
 ![Form](/images/1.png)
  * To edit event/task you can select event/task and click on "Edit" button (or just double click on selected item)
  * To delete event/task you can select event/task and click on "Delete" button (or just press Delete key if you selected item)
- 
+
+## How it works? ##
+
+ When programm is running and when event/task started programm will send a toast notification.
+  ![Notification](/images/3.png)
+
  ![Programm interface](/images/2.png)
