@@ -3,8 +3,10 @@ using Microsoft.Win32;
 using System;
 using System.Data;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Security.Principal;
 using System.Windows.Forms;
 
 namespace EventsSchedule
@@ -13,7 +15,7 @@ namespace EventsSchedule
     {
         public Database database;
 
-        private readonly RegistryKey _run = Registry.LocalMachine.OpenSubKey("SOFTWARE").OpenSubKey("Microsoft").OpenSubKey("Windows").OpenSubKey("CurrentVersion").OpenSubKey("Run", true);
+        private readonly RegistryKey _run = null;
         private string[] _args;
 
         private bool allowExit = false;
@@ -21,9 +23,19 @@ namespace EventsSchedule
         public MainForm(string[] args)
         {
             InitializeComponent();
+            Directory.SetCurrentDirectory(Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath));
             database = new Database();
             _args = args;
+            if (IsAdministrator())
+            {
+                _run = Registry.LocalMachine.OpenSubKey("SOFTWARE").OpenSubKey("Microsoft").OpenSubKey("Windows").OpenSubKey("CurrentVersion").OpenSubKey("Run", true);
+            }
+            else
+            {
+                _run = Registry.LocalMachine.OpenSubKey("SOFTWARE").OpenSubKey("Microsoft").OpenSubKey("Windows").OpenSubKey("CurrentVersion").OpenSubKey("Run");
+            }
         }
+
 
         private void addEventButton_Click(object sender, EventArgs e)
         {
@@ -139,10 +151,20 @@ namespace EventsSchedule
 
         private void autoRunButton_Click(object sender, EventArgs e)
         {
+            if(!IsAdministrator())
+            {
+                ProcessStartInfo info = new ProcessStartInfo(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
+                info.UseShellExecute = true;
+                info.Verb = "runas";
+                Process.Start(info);
+                allowExit = true;
+                Close();
+                return;
+            }
             autoRunButton.Checked = !autoRunButton.Checked;
             if (autoRunButton.Checked)
             {
-                _run.SetValue("EventsSchedule", new Uri(System.Reflection.Assembly.GetExecutingAssembly().CodeBase).LocalPath + " -silent");
+                _run.SetValue("EventsSchedule", new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath + " -silent");
             }
             else
             {
@@ -184,6 +206,12 @@ namespace EventsSchedule
                 Hide();
                 notifyIcon.Visible = true;
             }
+        }
+
+        public static bool IsAdministrator()
+        {
+            return (new WindowsPrincipal(WindowsIdentity.GetCurrent()))
+                      .IsInRole(WindowsBuiltInRole.Administrator);
         }
     }
 }

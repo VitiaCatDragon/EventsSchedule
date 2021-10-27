@@ -8,7 +8,7 @@ namespace EventsSchedule
     public class Database
     {
 
-        private static SQLiteConnection _connection = new SQLiteConnection(@"Data Source=events.db; Version=3;");
+        private static SQLiteConnection _connection = new SQLiteConnection($"Data Source={Directory.GetCurrentDirectory() + "\\events.db"}; Version=3;");
 
         public List<Record> Records = new List<Record>();
         public Dictionary<string, string> Settings = new Dictionary<string, string>();
@@ -20,9 +20,9 @@ namespace EventsSchedule
 
         private void CheckDatabase()
         {
-            if (!File.Exists(@"events.db"))
+            if (!File.Exists(Directory.GetCurrentDirectory() + "\\events.db"))
             {
-                SQLiteConnection.CreateFile(@"events.db");
+                SQLiteConnection.CreateFile(Directory.GetCurrentDirectory() + "\\events.db");
                 CreateDatabase();
             }
             else
