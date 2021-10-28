@@ -1,3 +1,5 @@
+# English #
+
 ## What is Events Schedule? ##
 Events Schedule is the programm can help you to don't forget events or your tasks.
 
@@ -9,6 +11,24 @@ Events Schedule is the programm can help you to don't forget events or your task
 ## How it works? ##
 
  When programm is running and when event/task started programm will send a toast notification.
+  ![Notification](/images/3.png)
+
+ ![Programm interface](/images/2.png)
+
+# Русский #
+
+
+## Что такое Events Schedule? ##
+Events Schedule это программа, которая позволит вам не забыть события или ваши задания.
+
+ * Вы можете добавить новое событие/задание нажатием кнопки "Добавить". В открытой форме, вы можете задать имя и дату события
+![Form](/images/1.png)
+ * Чтобы изменить событие/задание - выберите событие и нажмите кнопку "Изменить" (или просто два раза кликните по выбранному элементу)
+ * Чтобы удалить событие/задание - выберите событие и нажмите кнопку "Удалить" (или нажмите клавишу Delete если вы выбрали элемент)
+
+## Как это работает? ##
+
+ Когда программа запущена, и когда событие/задание начато, то программа отправит оповещение.
   ![Notification](/images/3.png)
 
  ![Programm interface](/images/2.png)
