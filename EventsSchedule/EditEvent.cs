@@ -15,6 +15,14 @@ namespace EventsSchedule
             _item = item;
             eventName.Text = item.SubItems[1].Text;
             eventDate.Value = DateTimeOffset.FromUnixTimeSeconds(((Record)item.Tag).Date).UtcDateTime.ToLocalTime();
+            if (MainForm.Language == "1")
+            {
+                Text = "Редактировать событие";
+                editButton.Text = "ОК";
+                cancelButton.Text = "Отменить";
+                label1.Text = "Название:";
+                label2.Text = "Дата события:";
+            }
         }
 
         private void editButton_Click(object sender, EventArgs e)

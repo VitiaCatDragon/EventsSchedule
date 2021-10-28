@@ -10,6 +10,14 @@ namespace EventsSchedule
         {
             InitializeComponent();
             _form = form;
+            if(MainForm.Language == "1")
+            {
+                Text = "Запланировать событие";
+                okButton.Text = "ОК";
+                cancelButton.Text = "Отменить";
+                label1.Text = "Название:";
+                label2.Text = "Дата события:";
+            }
         }
 
         private void okButton_Click(object sender, EventArgs e)

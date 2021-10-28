@@ -24,6 +24,7 @@ namespace EventsSchedule
             {
                 SQLiteConnection.CreateFile(Directory.GetCurrentDirectory() + "\\events.db");
                 CreateDatabase();
+                AddSettings();
             }
             else
             {
@@ -44,13 +45,39 @@ namespace EventsSchedule
             return id;
         }
 
-        public static void AddSettings(Record record)
+        public static void AddSettings()
         {
-            string commandText = "INSERT INTO `settings`(key, value) VALUES (\"notification_audio\", NULL, \"version\", \"2\")";
+            string commandText = "INSERT INTO `settings`(key, value) VALUES (\"notification_audio\", NULL), (\"version\", \"2\"), (\"language\", \"0\")";
             var command = new SQLiteCommand(commandText, _connection);
             _connection.Open();
             command.ExecuteNonQuery();
             _connection.Close();
+        }
+
+        public static void EditSetting(string key, string value)
+        {
+            string commandText = "UPDATE `settings` SET `value` = @value WHERE `key` = @key";
+            var command = new SQLiteCommand(commandText, _connection);
+            command.Parameters.AddWithValue("@key", key);
+            command.Parameters.AddWithValue("@value", value);
+            _connection.Open();
+            command.ExecuteNonQuery();
+            _connection.Close();
+        }
+
+        public static string GetSetting(string key)
+        {
+            string commandText = "SELECT value FROM `settings` WHERE `key` = @key";
+            var command = new SQLiteCommand(commandText, _connection);
+            _connection.Open();
+            command.Parameters.AddWithValue("@key", key);
+            var reader = command.ExecuteReader();
+            string value = "";
+            reader.Read();
+            value = reader.GetString(0);
+            reader.Close();
+            _connection.Close();
+            return value;
         }
 
         public static void EditRecord(Record record)

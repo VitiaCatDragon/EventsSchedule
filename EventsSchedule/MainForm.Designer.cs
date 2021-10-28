@@ -42,6 +42,7 @@
             this.editEventButton = new System.Windows.Forms.ToolStripButton();
             this.removeEventButton = new System.Windows.Forms.ToolStripButton();
             this.autoRunButton = new System.Windows.Forms.ToolStripButton();
+            this.settingsButton = new System.Windows.Forms.ToolStripButton();
             this.eventChecker = new System.Windows.Forms.Timer(this.components);
             this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.notifyIconContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -100,7 +101,8 @@
             this.addEventButton,
             this.editEventButton,
             this.removeEventButton,
-            this.autoRunButton});
+            this.autoRunButton,
+            this.settingsButton});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(800, 25);
@@ -139,9 +141,19 @@
             this.autoRunButton.Image = ((System.Drawing.Image)(resources.GetObject("autoRunButton.Image")));
             this.autoRunButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.autoRunButton.Name = "autoRunButton";
-            this.autoRunButton.Size = new System.Drawing.Size(164, 22);
-            this.autoRunButton.Text = "Start when windows starts";
+            this.autoRunButton.Size = new System.Drawing.Size(129, 22);
+            this.autoRunButton.Text = "Start with Windows";
             this.autoRunButton.Click += new System.EventHandler(this.autoRunButton_Click);
+            // 
+            // settingsButton
+            // 
+            this.settingsButton.Image = ((System.Drawing.Image)(resources.GetObject("settingsButton.Image")));
+            this.settingsButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.settingsButton.Name = "settingsButton";
+            this.settingsButton.Size = new System.Drawing.Size(69, 22);
+            this.settingsButton.Text = "Settings";
+            this.settingsButton.ToolTipText = "Settings";
+            this.settingsButton.Click += new System.EventHandler(this.settingsButtons_Click);
             // 
             // eventChecker
             // 
@@ -212,5 +224,6 @@
         private System.Windows.Forms.NotifyIcon notifyIcon;
         private System.Windows.Forms.ContextMenuStrip notifyIconContextMenu;
         private System.Windows.Forms.ToolStripMenuItem exitButton;
+        private System.Windows.Forms.ToolStripButton settingsButton;
     }
 }

@@ -42,7 +42,7 @@ namespace EventsSchedule
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 9);
+            this.label1.Location = new System.Drawing.Point(9, 12);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(80, 13);
             this.label1.TabIndex = 0;
@@ -50,7 +50,7 @@ namespace EventsSchedule
             // 
             // eventName
             // 
-            this.eventName.Location = new System.Drawing.Point(98, 7);
+            this.eventName.Location = new System.Drawing.Point(98, 9);
             this.eventName.Name = "eventName";
             this.eventName.Size = new System.Drawing.Size(307, 20);
             this.eventName.TabIndex = 1;

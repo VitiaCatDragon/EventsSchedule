@@ -11,20 +11,25 @@ using System.Windows.Forms;
 
 namespace EventsSchedule
 {
+
     public partial class MainForm : Form
     {
         public Database database;
+        public static string Language;
 
         private readonly RegistryKey _run = null;
         private string[] _args;
 
-        private bool allowExit = false;
+        public static bool allowExit = false;
+
+        private WMPLib.WindowsMediaPlayer _player = new WMPLib.WindowsMediaPlayer();
 
         public MainForm(string[] args)
         {
             InitializeComponent();
             Directory.SetCurrentDirectory(Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath));
             database = new Database();
+            Language = Database.GetSetting("language");
             _args = args;
             if (IsAdministrator())
             {
@@ -63,6 +68,18 @@ namespace EventsSchedule
         private void Form1_Load(object sender, EventArgs e)
         {
             autoRunButton.Checked = _run.GetValue("EventsSchedule") != null;
+            if(Language == "1")
+            {
+                addEventButton.Text = "Добавить";
+                editEventButton.Text = "Изменить";
+                removeEventButton.Text = "Удалить";
+                ColumnName.Text = "Название";
+                ColumnDate.Text = "Дата";
+                columnFinished.Text = "Завершен?";
+                columnStartsAt.Text = "Начнётся через";
+                autoRunButton.Text = "Запускать вместе с Windows";
+                settingsButton.Text = "Настройки";
+            }
             foreach (var record in database.Records)
             {
                 AddItem(record);
@@ -85,7 +102,7 @@ namespace EventsSchedule
 
         public void AddItem(Record record)
         {
-            ListViewItem item = new ListViewItem(new string[] { record.Id.ToString(), record.Name, DateTimeOffset.FromUnixTimeSeconds(record.Date).ToLocalTime().ToString("yyyy, dd MMMM HH:mm"), "Finished", record.Finished ? "Yes ": "No" })
+            ListViewItem item = new ListViewItem(new string[] { record.Id.ToString(), record.Name, DateTimeOffset.FromUnixTimeSeconds(record.Date).ToLocalTime().ToString("yyyy, dd MMMM HH:mm"), Language == "1" ? "Завершен" : "Finished", record.Finished ? (Language == "1" ? "Да" : "Yes ") : (Language == "1" ? "Нет" : "No") })
             {
                 Tag = record
             };
@@ -120,7 +137,7 @@ namespace EventsSchedule
                 {
 
                     if(!e.Shift)
-                        if (MessageBox.Show("Are you sure want to delete this event?\n\nUse Shift + Delete to delete events without confirmation", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+                        if (MessageBox.Show(Language == "1" ? "Вы действительно хотите удалить это событие?\n\nИспользуйте Shift + Delete чтобы удалять без подтверждения": "Are you sure want to delete this event?\n\nUse Shift + Delete to delete events without confirmation", Language == "1" ? "Подтверждение" : "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
                             return;
                     Database.DeleteRecord(eventsList.SelectedItems[0].Index + 1);
                     eventsList.Items.Remove(eventsList.SelectedItems[0]);
@@ -136,12 +153,22 @@ namespace EventsSchedule
                 {
                     record.Finished = true;
                     Database.EditRecord(record);
+                    if (Language == "1")
+                    {
+                        record.ViewItem.SubItems[3].Text = "Завершен";
+                        record.ViewItem.SubItems[4].Text = "Да";
+                        new ToastContentBuilder()
+                        .AddText("Событие началось")
+                        .AddText($"Событие с названием \"{record.Name}\" началось!")
+                        .AddButton(new ToastButton("Удалить", "delete=" + record.Id.ToString()))
+                        .Show();
+                        continue;
+                    }
                     record.ViewItem.SubItems[3].Text = "Finished";
                     record.ViewItem.SubItems[4].Text = "Yes";
                     new ToastContentBuilder()
                     .AddText("Event started")
                     .AddText($"Event with name \"{record.Name}\" started!")
-                    //.AddButton(new ToastButton("Postpone for tomorrow", "tommorow=" + record.Id.ToString() + '='))
                     .AddButton(new ToastButton("Delete", "delete=" + record.Id.ToString()))
                     .Show();
                 }
@@ -212,6 +239,11 @@ namespace EventsSchedule
         {
             return (new WindowsPrincipal(WindowsIdentity.GetCurrent()))
                       .IsInRole(WindowsBuiltInRole.Administrator);
+        }
+
+        private void settingsButtons_Click(object sender, EventArgs e)
+        {
+            new SettingsForm().ShowDialog();
         }
     }
 }
